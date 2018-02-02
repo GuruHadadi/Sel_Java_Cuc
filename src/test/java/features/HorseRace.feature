@@ -1,13 +1,14 @@
-Feature: As a user, I go bet
+Feature: As a user, I want to perform betting on William Hill website
 
-  Scenario: Add money to Bet slip
+  Scenario Outline: Add stakes to multiple betting types for horse racing
     Given I am on William Hill main page
     And I click on Racing link
-    And I click on Horse Racking Betting cell
-    When I enter betting type and amount
-    And click on Add to Bet slip
-    Then the betting type and stake displays in betslip summary area
-#
-#    Examples:
-#      | betType                                              |
-#      | "Quinella"                |
+    And I click on any available Horse Racking Betting cell
+    When I enter <bettingType> and <stake>
+    And click on Add to Bet slip button
+    Then the added <bettingType> and <stake> displays correctly in the betslip summary area
+
+    Examples:
+      | bettingType | stake |
+      | Quinella    | 10.5  |
+      | Exacta      | 21.5  |

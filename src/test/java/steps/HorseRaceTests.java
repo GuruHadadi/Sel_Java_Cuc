@@ -1,22 +1,26 @@
 package steps;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import pages.HorseRacingBettingPage;
 import pages.HorseRacingPage;
 import pages.WilliamHillHomePage;
-import pages.WilliamHillHomePage_2;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,6 +32,12 @@ public class HorseRaceTests {
     WebDriver driver;
     String baseUrl = "https://www.williamhill.com.au/";
     Wait<WebDriver> wait;
+    String browser = System.getProperty("browser");
+
+    //  this is my browser stack credentials :)
+    private static final String USERNAME = "guruhadadi1";
+    private static  final String AUTOMATE_KEY = "CREdthD9fPLQZUp11qyr";
+    private static  final String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub";
 
     //  Pages
     WilliamHillHomePage objHome;
@@ -35,8 +45,26 @@ public class HorseRaceTests {
     HorseRacingBettingPage bettingPage;
 
     @cucumber.api.java.Before
-    public void setup() {
-        driver = new FirefoxDriver();
+    public void setup() throws MalformedURLException {
+
+        if(browser.equals("firefox")){
+            System.out.println("Running test in local firefox");
+            driver = new FirefoxDriver();
+        }
+        else if(browser.equals("chrome")){
+            System.out.println("Running test in local chrome");
+            System.setProperty("webdriver.chrome.driver", "/Users/guru/Documents/Projects/TestAutomation/Sel_Java_Cuc/src/test/resources/chromedriver");
+            driver = new ChromeDriver();
+        }
+        else if(browser.equals("cloud_firefox")){
+            System.out.println("Running test in cloud - browserstack - firefox");
+            driver = new RemoteWebDriver(new URL(URL), DesiredCapabilities.firefox());
+        }
+        else{
+            //  default
+            driver = new FirefoxDriver();
+        }
+
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         wait = new FluentWait<WebDriver>(driver)
@@ -44,6 +72,27 @@ public class HorseRaceTests {
                 .pollingEvery(3, TimeUnit.SECONDS)
                 .ignoring(NoSuchElementException.class);
 
+    }
+
+    @BeforeClass
+    public void mysetup(){
+        System.out.println("set up method");
+    }
+
+    @AfterClass
+    public void mycleanup(){
+        System.out.println("clean up method");
+    }
+
+    @cucumber.api.java.After
+    public void cleanup() {
+        //  clear all betting
+        if(bettingPage != null) {
+            if (bettingPage.betSlipSummaryClearButton.isDisplayed()) {
+                bettingPage.betSlipSummaryClearButton.click();
+            }
+        }
+        driver.close();
     }
 
     @Given("^I am on William Hill main page$")
@@ -62,10 +111,10 @@ public class HorseRaceTests {
         Assert.assertTrue(racePage.sectionTitle.getText().equals("Horse Racing"));
     }
 
-    @When("^I click on Horse Racking Betting cell$")
+    @And("^I click on any available Horse Racking Betting cell$")
     public void iClickOnHorseRackingBettingCell() throws Throwable {
-        driver.findElement(By.linkText("Tomorrow")).click();
-        Thread.sleep(5000);
+        //driver.findElement(By.linkText("Tomorrow")).click();
+        //Thread.sleep(5000);
 //        wait.until(ExpectedConditions.elementToBeClickable(racePage.racingGridCell));
         racePage.racingGridCell.click();
         bettingPage = new HorseRacingBettingPage(driver);
@@ -73,29 +122,27 @@ public class HorseRaceTests {
         Assert.assertTrue(bettingPage.getTitle().contains("Horse Racing Betting"));
     }
 
-    @When("^I enter betting type and amount$")
-    public void iEnterBettingTypeAndAmount() throws Throwable {
+    @When("^I enter (.*?) and (.*?)$")
+    public void iEnterAnd(String bettingType, String stake) throws Throwable {
         bettingPage.bettingTypeDropDown().click();
-        bettingPage.bettingTypeDropDownOption("Quinella").click();
-        bettingPage.enterBettingAmount("10.5");
+        bettingPage.bettingTypeDropDownOption(bettingType).click();
+        bettingPage.enterBettingAmount(stake);
         Assert.assertEquals(bettingPage.addToBetSlipButton.isEnabled(), true);
     }
 
-    @And("^click on Add to Bet slip$")
+    @And("^click on Add to Bet slip button$")
     public void clickOnAddToBetSlip() throws Throwable {
         bettingPage.addToBetSlipButton.click();
-        bettingPage.handleLoginDialog(bettingPage.addToBetSlipButton, wait);
+        //bettingPage.handleLoginDialog(bettingPage.addToBetSlipButton, wait);
     }
 
-    @Then("^the betting type and stake displays in betslip summary area$")
-    public void theBettingTypeAndStakeDisplaysInBetslipSummaryArea() throws Throwable {
+    @Then("^the added (.*?) and (.*?) displays correctly in the betslip summary area$")
+    public void theBettingTypeAndStakeDisplaysInBetslipSummaryArea(String bettingType, String stake) throws Throwable {
         bettingPage.clickBetSlipButton();
-        //bettingPage.handleLoginDialog(bettingPage.betSlipTopButtons.get(1), wait);
-        //wait.until(ExpectedConditions.visibilityOf(bettingPage.betSlipSummaryClearButton));
-//        Assert.assertTrue(bettingPage.betSlipSummaryClearButton.isDisplayed());
         Assert.assertTrue(bettingPage.betSlipCountText.getText().contains("1"));
-        Assert.assertTrue(bettingPage.betSlipSummaryBettingTypeText.getText().contains("Quinella"));
-        Assert.assertTrue(bettingPage.betSlipSummaryAmountInput.getAttribute("value").contains("10.5"));
+        Assert.assertTrue(bettingPage.betSlipSummaryBettingTypeText.getText().contains(bettingType));
+        Assert.assertTrue(bettingPage.betSlipSummaryAmountInput.getAttribute("value").contains(stake));
     }
+
 }
 
