@@ -2,13 +2,12 @@ Feature: As a user, I go bet
 
   Scenario: Add money to Bet slip
     Given I am on William Hill main page
-#    And I click on Racing link
-#    And I click the first item in the list
-#    Then I land on the product page
-#    When I add the item to cart
-#    Then product is added successfully
+    And I click on Racing link
+    And I click on Horse Racking Betting cell
+    When I enter betting type and amount
+    And click on Add to Bet slip
+    Then the betting type and stake displays in betslip summary area
 #
 #    Examples:
-#      | searchItem                                              |
-#      | "magic mouse apple rechargeable Battery"                |
-#      | "fitbit blaze screen protector clear tempered glass hd" |
+#      | betType                                              |
+#      | "Quinella"                |

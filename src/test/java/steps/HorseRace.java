@@ -1,16 +1,9 @@
 package steps;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
-import org.junit.Before;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import pages.WilliamHillHomePage;
+import pages.WilliamHillHomePage_2;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,9 +11,10 @@ import java.util.concurrent.TimeUnit;
  * Created by guru on 1/02/18.
  */
 public class HorseRace {
+/*
 
-    WebDriver driver;
-    WilliamHillHomePage objHomePage;
+    static WebDriver driver;
+    WilliamHillHomePage_2 objHomePage;
     String baseUrl = "https://www.williamhill.com.au/";
 
     @cucumber.api.java.Before
@@ -28,12 +22,18 @@ public class HorseRace {
         driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get(baseUrl);
+        WilliamHillHomePage_2.setDriver(driver);
     }
 
-    @Given("^I am on William Hill main page$")
+    @Given("^I am on asdf William Hill main page$")
     public void goToHorseRacingPage() throws Throwable {
-        objHomePage = new WilliamHillHomePage(driver);
+        objHomePage.addBetSlip.click();
+        //objHomePage = new WilliamHillHomePage_2(driver);
         objHomePage.click("asdf");
+*/
+
+    ////driver.findElement(By.cssSelector("div[class^=Header_header] h1")).getText()
+//    driver.findElement(By.cssSelector("div[class^=EventTypeHeader_eventTypeHeader] span")).getText()
 
 //driver.findElement(By.cssSelector("div[class^=Header_header] h1")).getText()
 //"Sports Betting Online & Horse Racing in Australia - William Hill"
@@ -41,7 +41,8 @@ public class HorseRace {
 
         //driver.findElement(By.linkText("RACING")).click();
         //driver.findElements(By.cssSelector("div[class^=EventTypeHeader]")).get(0).findElement(By.tagName("span")).getText()
-        //driver.findElements(By.cssSelector(".Grid_table_1dV")).get(1).findElements(By.tagName("a")).get(0).click();
+
+    //driver.findElements(By.cssSelector(".Grid_table_1dV")).get(1).findElements(By.tagName("a")).get(0).click();
         //
         //driver.findElements(By.cssSelector("#mystery-bet svg")).get(1).click();
         //driver.findElement(By.cssSelector(".Portal_portal_11Y")).findElements(By.tagName("span")).get(4).click();
@@ -125,5 +126,5 @@ js.executeScript("arguments[0].value = 10.5", e);
 
     }
 
-}
+
 

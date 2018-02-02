@@ -1,6 +1,5 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,14 +7,15 @@ import org.openqa.selenium.WebElement;
 /**
  * Created by guru on 2/02/18.
  */
-public class Elements_Helper {
+public class Elements_Helper1 extends PageObject {
 
-    private static WebDriver drive;
-    WebDriver driver;
-    Elements_Helper helper;
+    private WebDriver driver;
     private static WebElement element;
 
-
+    Elements_Helper1(WebDriver driver){
+        super(driver);
+        this.driver = driver;
+    }
 
     public WebElement addBetSlip() {
         element = (WebElement)((JavascriptExecutor)driver).executeScript(
@@ -35,9 +35,6 @@ public class Elements_Helper {
     }
 
 
-    public static void setDriver(WebDriver driver) {
-        drive = driver;
-    }
 
 
 }
